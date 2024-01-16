@@ -1,1 +1,1 @@
-# hari-lr-Outdoor-Artificial-Ice-Rinks-in-Toronto
+Outdoor-Artificial-Ice-Rinks-in-Toronto
