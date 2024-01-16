@@ -1,0 +1,123 @@
+---
+title: "Outdoor Artificial Ice Rinks in Toronto"
+author: "Hari Lee"
+format: pdf
+abstract: This reports concentrates on the geographical distribution of City operated outdoor ice rinks in the City of Toronto. This data was obtain from the Toronto Open Data site. By analysing this data, it is concluded that the Toronto and East York Community Council Area hosts majority of the Outdoor Artifical Ice Rinks. The research discusses the patterns in the allocation of ice rinks and the potential reasons behind this.
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+#install.packages("tidyverse")
+#install.packages("janitor")
+#install.packages("opendatatoronto")
+library(tidyverse)
+library(janitor)
+library(opendatatoronto)
+```
+
+```{r}
+#| echo: false
+#### Get data from the website OpenDataToronto ####
+raw_icerinks_data <-
+  read_csv(
+    file =
+      "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/e51b5d31-a53c-4fc5-a204-36c43243dd3b/resource/71195ba0-8d07-4b0d-927c-175b14835b85/download/Outdoor%20Ice%20Rinks%20-%204326.csv",
+    show_col_types = FALSE,
+  )
+```
+
+```{r}
+#| echo: false
+### Save data into the Quarto document ###
+write_csv(
+  x = raw_icerinks_data,
+  file = "outdoor_icerinks.csv"
+)
+```
+
+```{r}
+#| echo: false
+#### Clean data ####
+raw_icerinks_data <-
+  read_csv(
+    file = "outdoor_icerinks.csv",
+    show_col_types = FALSE
+  )
+```
+
+# Introduction
+Artificial outdoor ice rinks play a significant role in shaping winter recreational activities within urban settings. This report focuses on the geographical distribution of outdoor ice rinks operated by the City in the City of Toronto, utilizing data obtained from the Toronto Open Data site. The dataset provides insights into various aspects of these facilities, including their names, postal codes, lenght, width, geometry, locations, types of ice pads, andwhether they are illuminated. 
+
+# Data
+The data selected for the purpose of analysis is a data set called Outdoor Artificial Ice Rinks from Open data Toronto by @opendatatoronto. The outdoor artificial ice rinks and skate trails information found in this dataset include: Parent Asset Name, Asset ID, Asset Name, Park Name, Public Name, Pad Length, Pad Width, Ice Pad Type, Boards (Ice Rink), Lit Area, Community Council Area,Ward and Address. The specific data that will be used for this report is the Community Council Area (or district location). 
+
+```{r}
+#| include: false
+#### Change the name of the raw data into the clean data ####
+cleaned_icerinks_data <-
+  clean_names(raw_icerinks_data)
+raw_icerinks_data
+```
+
+```{r}
+#| include: false
+#### Select the data we are going to be using ####
+cleaned_icerinks_data <-
+  cleaned_icerinks_data |>
+  select(
+    id,
+    community_council_area,
+    ice_pad_type,
+    rink_is_lit
+  )
+head(cleaned_icerinks_data)
+```
+
+```{r}
+#| include: false
+#### Count the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  count(community_council_area)
+```
+
+```{r}
+#| echo: false
+#### Plot the data into a graph that shows the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = community_council_area)) + geom_bar() + theme_minimal() + labs (x = "Toronto Districts", y = "Outdoor Ice Rinks")
+```
+This bar graph displays the number of Outdoor Artificial Ice Rinks in each Community Council Area of Toronto. 
+
+```{r}
+ 
+#### Plot the data into a graph that shows the number of Type of Ice Rinks ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = ice_pad_type)) + geom_bar() + theme_minimal() + labs (x = "Type of Ice Pads", y = "Number of Ice Rinks")
+```
+
+This bar graph displays the number of Outdoor Ice Pads and Skating Trails out of the 70 Outdoor Artificial Ice Rinks in the city of Toronto. 
+
+```{r}
+
+#| echo: false
+#### Plot the data into a graph that shows the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = rink_is_lit)) + geom_bar() + theme_minimal() + labs (x = "Lighting", y = "Number")
+```
+
+This bar graph displays the number of Outdoor Artificial Ice Rinks in the city of Toronto that are lit.
+
+# Conclusion and Discussion
+In summary, the data data, obtained from the Toronto Open Data [@opendatatoronto] site was cleaned and analyzeed using the statistical programming language R [@citeR] including the tidyverse [@tidyverse] and janitor [@janitor].The investigation focused on critical aspects, including community council areas, types of ice pads, and the presence of lighting. 
+
+This analysis of the City-operated outdoor artificial ice rinks in Toronto sheds light on several key patterns and characteristics. It was revealed that the Toronto and East York Community Council Area hosts the majority of these outdoor facilities (Figure 1). The following bar graphs presented illustrate provide a visual representation of the types of ice pads (Figure 2) and the illuminated nature of these rinks (Figure 3). These findings contribute to a comprehensive understanding of the city's winter recreational outdoor infrastructure.
+
+The prominence of ice rinks in the Toronto and East York area raises intriguing questions about the underlying factors contributing to this concentration. Further exploration into community preferences, urban planning strategies, and geographical especifications may provide valuable insights into the observed patterns.
+
+\newpage
+
+# References
+
