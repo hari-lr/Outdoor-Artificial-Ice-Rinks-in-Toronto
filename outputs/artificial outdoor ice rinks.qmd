@@ -1,0 +1,110 @@
+---
+title: "Outdoor Artificial Ice Rinks in Toronto"
+author: "Hari Lee"
+format: html
+abstract: This study concentrates on the geographical distribution of outdoor ice rinks in the City of Toronto. This data was obtain from the Toronto Open Data site. By analysing this data, the research discusses the patterns in the allocation of ice rinks and the potential reasons behind this.
+bibligraphy: references.bib
+---
+
+```{r}
+
+#### Workspace setup ####
+#install.packages("tidyverse")
+#install.packages("janitor")
+#install.packages("opendatatoronto")
+library(tidyverse)
+library(janitor)
+library(opendatatoronto)
+```
+
+```{r}
+
+#### Simulate data and test ####
+simulated_data <-
+  tibble(
+  "Outdoor Ice Rinks" = 1:69,
+  "Community Counsil Area " = sample(
+    x = c("Etobicoke York","North York","Toronto and East York", "Scarborough"),
+    size = 69,
+    replace = TRUE
+  )
+)
+simulated_data
+```
+
+```{r}
+
+#### Get data from the website OpenDataToronto ####
+raw_icerinks_data <-
+  read_csv(
+    file =
+      "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/e51b5d31-a53c-4fc5-a204-36c43243dd3b/resource/71195ba0-8d07-4b0d-927c-175b14835b85/download/Outdoor%20Ice%20Rinks%20-%204326.csv",
+    show_col_types = FALSE,
+  )
+```
+
+```{r}
+
+### Save data into the Quarto document ###
+write_csv(
+  x = raw_icerinks_data,
+  file = "outdoor_icerinks.csv"
+)
+```
+
+```{r}
+
+#### Clean data ####
+raw_icerinks_data <-
+  read_csv(
+    file = "outdoor_icerinks.csv",
+    show_col_types = FALSE
+  )
+```
+
+```{r}
+
+#### Change the name of the raw data into the clean data ####
+cleaned_icerinks_data <-
+  clean_names(raw_icerinks_data)
+raw_icerinks_data
+```
+
+```{r}
+
+#### Select the data we are going to be using ####
+cleaned_icerinks_data <-
+  cleaned_icerinks_data |>
+  select(
+    id,
+    community_council_area,
+    ice_pad_type,
+    rink_is_lit
+  )
+head(cleaned_icerinks_data)
+```
+
+```{r}
+
+#### Count the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  count(community_council_area)
+```
+
+```{r}
+#### Plot the data into a graph that shows the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = community_council_area)) + geom_bar() + theme_minimal() + labs (x = "Toronto Districts", y = "Outdoor Ice Rinks")
+```
+
+```{r}
+#### Plot the data into a graph that shows the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = ice_pad_type)) + geom_bar() + theme_minimal() + labs (x = "Toronto Districts", y = "Outdoor Ice Rinks")
+```
+
+```{r}
+#### Plot the data into a graph that shows the number of Ice Rinks per Community Council ####
+cleaned_icerinks_data |>
+  ggplot(aes(x = rink_is_lit)) + geom_bar() + theme_minimal() + labs (x = "Toronto Districts", y = "Outdoor Ice Rinks")
+```
